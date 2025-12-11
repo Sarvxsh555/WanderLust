@@ -17,7 +17,7 @@
         price.toLocaleString("en-in") this function is used to conver number to indian standard with commas.
         first it converts num to string.
             -->
-         &#8377;<%=listing.price.toLocaleString("en-in")%> <br>
+        &#8377;<%= listing.price ? listing.price.toLocaleString("en-in") : 0 %>/night<br>
         <%=listing.location%> <br>
         <%=listing.country%>
     </p>
