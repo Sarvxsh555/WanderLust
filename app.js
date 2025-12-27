@@ -1,3 +1,8 @@
+if(process.env.NODE_ENV != "production"){
+    require('dotenv').config()
+}
+
+
 const express=require("express");
 const app=express();
 const port=8080;
@@ -14,6 +19,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const passportLocalMongoose = require("passport-local-mongoose");
 const User = require("./models/user.js");
+
 
 const session = require('express-session');
 const flash = require('connect-flash');
@@ -101,7 +107,7 @@ app.use("/",userRouter);
 
 // app.all("/*",(req,res,next)=>{
 //     next(new ExpressError(404,"Page not found!"));
-// });
+// });    
 
 app.use((req, res, next) => {
     next(new ExpressError(404, "Page not found!"));
@@ -112,7 +118,8 @@ app.use((err,req,res,next)=>{
     res.status(statusCode).render("listings/error.ejs",{message});
     // res.status(statusCode).send(message);
 });
-
-app.listen(port,()=>{
+  
+app.listen(port,()=>{  
     console.log("Server is listening to port 8080");
 });
+        

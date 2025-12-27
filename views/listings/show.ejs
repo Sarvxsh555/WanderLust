@@ -6,7 +6,7 @@
         <h3><b><%=listing.title%></b></h3>
 
     <div class="card show-card listing-card" style="width: 30rem; height:max-content">
-    <img src="<%= listing.image?.url || 'https://images.unsplash.com/photo-1764708844823-00d2188dafd8?q=80&w=1287&auto=format&fit=crop' %>" class="card-img-top show-img" alt="listing_image">
+    <img src="<%= listing.image.url || 'https://images.unsplash.com/photo-1764708844823-00d2188dafd8?q=80&w=1287&auto=format&fit=crop' %>" class="card-img-top show-img" alt="listing_image">
     <div class="card-body">
     <p class="card-text">Owned By: <i><%=listing.owner.username%></i></p>
     <p class="card-text"> <%=listing.description%></p>
@@ -32,9 +32,21 @@
 
        <form action="/listings/<%=listing._id%>/review" method="post"  novalidate class="needs-validation">
         <div class=" mt-3 mb-3">
-           <label for="rating" class="form-label">Rating:</label>
-          <input type="range" name="review[rating]" id="rating" class="form-range" min="1" max="5">
-        </div>
+        <fieldset class="starability-slot">
+            <legend>Rating:</legend>
+            <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
+            <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+            <label for="first-rate1" title="Terrible">1 star</label>
+            <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+            <label for="first-rate2" title="Not good">2 stars</label>
+            <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+            <label for="first-rate3" title="Average">3 stars</label>
+            <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+            <label for="first-rate4" title="Very good">4 stars</label>
+            <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+            <label for="first-rate5" title="Amazing">5 stars</label>
+          </fieldset>
+          </div>
             <div class=" mt-3 mb-3">
           <label for="comment"class="form-label">Comments</label>
           <textarea rows="5" cols="20" name="review[comment]" id="comment" class="form-control" required></textarea>
@@ -42,6 +54,8 @@
         </div>
             <button class="btn btn-outline-dark">Submit</button>  
        </form>
+
+       
          <hr>
           <% } %>
 
@@ -52,7 +66,8 @@
         <div class="card-body">
           <h5 class="card-title">@<%=review.author.username%></h5>
           <p class="card-text"><%=review.comment%></p>
-          <p class="card-text"><%=review.rating%> stars</p>
+          <p class="starability-result" data-rating="<%=review.rating%>"></p>
+          
         </div>
         <form class="mb-3" method="POST" action="/listings/<%=listing._id%>/review/<%=review._id%>?_method=DELETE">
           <button class="btn btn-sm btn-dark">Delete</button>
