@@ -2,7 +2,6 @@ if(process.env.NODE_ENV != "production"){
     require('dotenv').config()
 }
 
-
 const express=require("express");
 const app=express();
 const port=8080;
@@ -53,9 +52,9 @@ async function main() {
 }
 
 
-app.get("/",(req,res)=>{
-    res.send("Working properly");
-});
+// app.get("/",(req,res)=>{
+//     res.send("Working properly");
+// });
 
 
 const sessionOptions = {

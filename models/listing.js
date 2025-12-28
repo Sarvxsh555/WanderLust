@@ -29,7 +29,37 @@ const listingSchema=new Schema({
         owner : {
             type : Schema.Types.ObjectId,
             ref : "User"
-        }
+        },
+         geometry: {
+            type: {
+            type: String, // Don't do `{ location: { type: String } }`
+            enum: ['Point'], // 'location.type' must be 'Point'
+            required: true
+            },
+            coordinates: {
+            type: [Number],
+            required: true
+            }
+        },
+    //     category:{
+    //         type : String,
+    //         enum: [
+    //     "trending",
+    //     "rooms",
+    //     "iconic_cities",
+    //     "castles",
+    //     "amazing_pools",
+    //     "camping",
+    //     "farms",
+    //     "arctic",
+    //     "forest_retreats",
+    //     "lakefront",
+    //     "private_villa",
+    //     "photo"
+    // ],
+    // required: true
+    // }
+
 });
 
 listingSchema.post("findOneAndDelete",async(listing)=>{
