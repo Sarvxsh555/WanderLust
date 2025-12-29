@@ -21,6 +21,7 @@ const User = require("./models/user.js");
 
 
 const session = require('express-session');
+const MongoStore = require('connect-mongo').default;
 const flash = require('connect-flash');
 
 //Express Routers
@@ -29,7 +30,10 @@ const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
 
-const MONGO_URL='mongodb://127.0.0.1:27017/wanderlust';
+// const MONGO_URL='mongodb://127.0.0.1:27017/wanderlust';
+const dbUrl=process.env.ATLASDB_URL;
+console.log("DB URL:", process.env.ATLASDB_URL);
+
 
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
@@ -40,25 +44,36 @@ app.engine("ejs",ejsMate);
 
 
 
-main()
-    .then((res)=>{
-        console.log("Connected to DB");
-    })
-    .catch(err => {
-        console.log(err)
-    });
 async function main() {
-  await mongoose.connect(MONGO_URL);
+  try {
+    await mongoose.connect(dbUrl);
+    console.log("✅ Connected to DB");
+} catch (err) {
+    console.log("❌ DB connection failed:", err);
+  }
 }
 
+main();
 
 // app.get("/",(req,res)=>{
 //     res.send("Working properly");
 // });
 
+const store = MongoStore.create ({
+     mongoUrl:dbUrl,
+     crypto:{
+        secret:  process.env.SECRET,
+     },
+     touchAfter:24*60*60
+});
+
+store.on("error",(err)=>{
+    console.log("Error in MONGO SESSION STORE",err);
+});
 
 const sessionOptions = {
-    secret: 'mysupersecretcode',
+    store : store,
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
      cookie: {
@@ -67,6 +82,7 @@ const sessionOptions = {
         httpOnly: true
     }
 };
+
 
 app.use(session(sessionOptions));
 app.use(flash());
@@ -118,7 +134,14 @@ app.use((err,req,res,next)=>{
     // res.status(statusCode).send(message);
 });
   
-app.listen(port,()=>{  
-    console.log("Server is listening to port 8080");
-});
+// app.listen(port,()=>{  
+//     console.log("Server is listening to port 8080");
+// });
         
+
+
+ app.listen(port, () => {
+ console.log(" Server is listening on port 8080");
+ });
+
+  

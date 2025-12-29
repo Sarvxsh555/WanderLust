@@ -1,36 +1,28 @@
 mapboxgl.accessToken = mapToken;
 
-/* ===============================
-   COORDINATES
-================================ */
 const coordinates = [
   Number(listing.geometry.coordinates[0]),
   Number(listing.geometry.coordinates[1])
 ];
 
-/* ===============================
-   MAP
-================================ */
+
 const map = new mapboxgl.Map({
   container: "map",
   style: "mapbox://styles/mapbox/streets-v12",
   center: coordinates,
   zoom: 9  
 });
-
-/* ===============================
-   LOAD ICON + ADD TO MAP
-================================ */
+ 
 map.on("load", () => {
   map.loadImage(
-    "/assets/cobra-snake.png", // ✅ relative path
+    "/assets/cobra-snake.png",
     (error, image) => {
       if (error) throw error;
 
-      // Add image to map
+
       map.addImage("cobra-icon", image);
 
-      // GeoJSON point
+
       map.addSource("listing-point", {  
         type: "geojson",
         data: {
@@ -45,13 +37,13 @@ map.on("load", () => {
         }
       });
 
-      // Symbol layer with custom icon
+
      map.addLayer({
   id: "listing-icon",
   type: "symbol",
   source: "listing-point",
   layout: {
-    /* ICON */
+
     "icon-image": "cobra-icon",
     "icon-size": [
       "interpolate",
@@ -63,7 +55,7 @@ map.on("load", () => {
     ],
     "icon-anchor": "bottom",
 
-    /* TEXT */
+
     "text-field": listing.location || "Bangalore",
     "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
     "text-size": 14,
@@ -78,7 +70,7 @@ map.on("load", () => {
 });
 
 
-      // Popup on click
+  
       map.on("click", "listing-icon", (e) => {
         new mapboxgl.Popup({ offset: 25 })
           .setLngLat(e.lngLat)
@@ -89,7 +81,6 @@ map.on("load", () => {
           .addTo(map);
       });
 
-      // Cursor pointer
       map.on("mouseenter", "listing-icon", () => {
         map.getCanvas().style.cursor = "pointer";
       });
