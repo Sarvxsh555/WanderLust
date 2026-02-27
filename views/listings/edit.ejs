@@ -59,6 +59,19 @@
                 Please Enter a Valid Location.
             </div>
        </div>
+       <div class="mb-3">
+            <label for="category" class="form-label">Category</label>
+            <select name="listing[category]" class="form-select" required>
+                <% for (const category of categories) { %>
+                    <option value="<%= category.value %>" <%= (listing.category || "trending") === category.value ? "selected" : "" %>>
+                        <%= category.label %>
+                    </option>
+                <% } %>
+            </select>
+            <div class="invalid-feedback">
+                Please Select a Category.
+            </div>
+       </div>
         <button class="btn btn-dark edit-btn">Edit</button>
         <br><br>
     </form>

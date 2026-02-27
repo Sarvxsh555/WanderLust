@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { CATEGORY_VALUES } = require("./utils/categories.js");
 
 module.exports.listingSchema=Joi.object({
     listing : Joi.object({
@@ -13,6 +14,7 @@ module.exports.listingSchema=Joi.object({
         location : Joi.string().required(),
         price : Joi.number().required().min(0),
         country :  Joi.string().required(),
+        category : Joi.string().valid(...CATEGORY_VALUES).required(),
     }).required()
 });
 

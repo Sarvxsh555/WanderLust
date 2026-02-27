@@ -19,6 +19,14 @@
     .filter p{
         font-size: 0.9rem;
     }
+    .filter-link{
+        color: inherit;
+        text-decoration: none;
+    }
+    .filter.active{
+        opacity: 1;
+        border-bottom: 2px solid black;
+    }
     .tax-info{
         display: none;
     }
@@ -33,67 +41,31 @@
     }
 </style>
 
+<%
+    const categoryIcons = {
+        trending: "fa-brands fa-gripfire",
+        rooms: "fa-solid fa-bed",
+        iconic_cities: "fa-solid fa-mountain-city",
+        castles: "fa-brands fa-fort-awesome",
+        amazing_pools: "fa-solid fa-person-swimming",
+        camping: "fa-solid fa-tent",
+        farms: "fa-solid fa-tractor",
+        arctic: "fa-solid fa-snowman",
+        forest_retreats: "fa-solid fa-tree"
+    };
+%>
+
 <div id="filters">
-    <div class="filter ">
-        <div>
-            <i class="fa-brands fa-gripfire icons" style="font-size: 1.5rem;"></i>
-        </div>
-        <p>Trending</p>
-    </div>
-    <div class="filter ">
-        <div>
-            <i class="fa-solid fa-bed" style="font-size:1.5rem;"></i>
-        </div>
-        <p>Rooms</p>
-    </div>
-    <div class="filter ">
-        <div>
-            <i class="fa-solid fa-mountain-city" style="font-size:1.5rem;"></i>
-        </div>
-        <p>Iconic Cities</p>
-    </div>
-    <div class="filter ">
-        <div>
-            <i class="fa-brands fa-fort-awesome" style="font-size:1.5rem;"></i>
-        </div>
-        <p>Castles</p>
-    </div>
-    <div class="filter ">
-        <div>
-            <i class="fa-solid fa-person-swimming"style="font-size:1.5rem;"></i>
-        </div>
-        <p>Amazing Pools</p>
-    </div>
-    <div class="filter ">
-        <div>
-            <i class="fa-solid fa-tent" style="font-size:1.5rem;"></i>
-        </div>
-        <p>Camping</p>
-    </div>
-    <div class="filter ">
-        <div>
-            <i class="fa-solid fa-tractor" style="font-size:1.5rem;"></i>
-        </div>
-        <p>Farms</p>
-    </div>
-    <div class="filter ">
-        <div>
-            <i class="fa-solid fa-snowman" style="font-size:1.5rem;"></i>
-        </div>
-        <p>Arctic</p>
-    </div>
-    <div class="filter ">
-        <div>
-            <i class="fa-solid fa-tree" style="font-size:1.5rem;"></i>
-        </div>
-        <p>Forest Retreats</p>
-    </div>
-    <!-- <div class="filter ">
-        <div>
-            <i class="fa-solid fa-house-user" style="font-size:1.5rem;"></i>
-        </div>
-        <p>Private Villa</p>
-    </div> -->
+    <% for (const category of categories) { %>
+        <a class="filter-link" href="/listings?category=<%= category.value %><%= q ? `&q=${encodeURIComponent(q)}` : "" %>">
+            <div class="filter <%= selectedCategory === category.value ? 'active' : '' %>">
+                <div>
+                    <i class="<%= categoryIcons[category.value] %>" style="font-size:1.5rem;"></i>
+                </div>
+                <p><%= category.label %></p>
+            </div>
+        </a>
+    <% } %>
     
     <div class="tax-toggle">
         <div class="form-check-reverse form-switch">

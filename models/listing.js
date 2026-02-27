@@ -1,6 +1,7 @@
 const mongoose=require("mongoose");
 const Schema=mongoose.Schema;
 const Review = require("./review.js")
+const { CATEGORY_VALUES } = require("../utils/categories.js");
 
 const listingSchema=new Schema({
     title : {
@@ -20,6 +21,12 @@ const listingSchema=new Schema({
         price : Number,
         location : String,
         country : String,
+        category : {
+            type : String,
+            enum : CATEGORY_VALUES,
+            default : "trending",
+            required : true
+        },
         reviews : [
             {
             type: Schema.Types.ObjectId,
@@ -41,25 +48,6 @@ const listingSchema=new Schema({
             required: true
             }
         },
-    //     category:{
-    //         type : String,
-    //         enum: [
-    //     "trending",
-    //     "rooms",
-    //     "iconic_cities",
-    //     "castles",
-    //     "amazing_pools",
-    //     "camping",
-    //     "farms",
-    //     "arctic",
-    //     "forest_retreats",
-    //     "lakefront",
-    //     "private_villa",
-    //     "photo"
-    // ],
-    // required: true
-    // }
-
 });
 
 listingSchema.post("findOneAndDelete",async(listing)=>{
