@@ -32,7 +32,6 @@ const userRouter = require("./routes/user.js");
 
 // const MONGO_URL='mongodb://127.0.0.1:27017/wanderlust';
 const dbUrl=process.env.ATLASDB_URL;
-console.log("DB URL:", process.env.ATLASDB_URL);
 
 
 app.set("view engine","ejs");
@@ -44,23 +43,14 @@ app.engine("ejs",ejsMate);
 
 
 
-async function main() {
-  try {
-    await mongoose.connect(dbUrl);
-    console.log("✅ Connected to DB");
-} catch (err) {
-    console.log("❌ DB connection failed:", err);
-  }
-}
-
-main();
+const clientPromise = mongoose.connect(dbUrl).then(() => mongoose.connection.getClient());
 
 // app.get("/",(req,res)=>{
 //     res.send("Working properly");
 // });
 
 const store = MongoStore.create ({
-     mongoUrl:dbUrl,
+     clientPromise,
      crypto:{
         secret:  process.env.SECRET,
      },
@@ -140,8 +130,17 @@ app.use((err,req,res,next)=>{
         
 
 
- app.listen(port, () => {
- console.log(" Server is listening on port 8080");
- });
+async function startServer() {
+    try {
+        await clientPromise;
+        console.log("Connected to DB");
+        app.listen(port, () => {
+            console.log(`Server is listening on port ${port}`);
+        });
+    } catch (err) {
+        console.error(`DB connection failed: ${err.message}`);
+        process.exit(1);
+    }
+}
 
-  
+startServer();
